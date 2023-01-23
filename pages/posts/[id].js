@@ -76,28 +76,8 @@ const fullpost = ({post}) => {
 }
 
 export default fullpost;
-export const getStaticPaths=async()=>{
-    let hostname;
-    if(process.env.NODE_ENV === 'development'){
-      hostname = process.env.NEXT_PUBLIC_DEV_URL
-    }else{
-      hostname = process.env.NEXT_PUBLIC_PROD_URL
-    };
-    const {data}= await axios.get(`http://${hostname}/api/posts/postIds`);
-    const allPaths = data.map(e=>{
-        return{
-            params :{
-                id:e._id
-            }
-        }
-    })
-    return{
-        paths:allPaths,
-        fallback:'blocking'
-    }
-
-}
-export const getStaticProps = async({params:{id}})=>{
+export const getServerSideProps = async(ctx)=>{
+    const {id} = ctx.params
     let hostname;
     if(process.env.NODE_ENV === 'development'){
       hostname = process.env.NEXT_PUBLIC_DEV_URL
