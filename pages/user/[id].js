@@ -23,28 +23,8 @@ const Profile = ({userInfo}) => {
 }
 
 export default Profile
-export const getStaticPaths=async()=>{
-    let hostname;
-    if(process.env.NODE_ENV === 'development'){
-      hostname = process.env.NEXT_PUBLIC_DEV_URL
-    }else{
-      hostname = process.env.NEXT_PUBLIC_PROD_URL
-    };
-    const {data}= await axios.get(`http://${hostname}/api/user/userIds`);
-    const allPaths = data.map(e=>{
-        return{
-            params :{
-                id:e._id
-            }
-        }
-    })
-    return{
-        paths:allPaths,
-        fallback:false
-    }
-
-}
-export const getStaticProps = async({params:{id}})=>{
+export const getServerSideProps = async(ctx)=>{
+  const {id} = ctx.params
     let hostname;
     if(process.env.NODE_ENV === 'development'){
       hostname = process.env.NEXT_PUBLIC_DEV_URL
