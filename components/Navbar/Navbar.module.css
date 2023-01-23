@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&display=swap');
+.navbar{
+    background: #171c24;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    padding: 0 100px;
+    width: 100%;
+    position: fixed;
+    top:0;
+    z-index: 9999999;
+}
+.navbar .logo a{
+        color: #fff;
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: -1px;
+}
+.navbar .navitems{
+    display: flex;
+  flex: 1;
+  padding: 0 0 0 40px;
+}
+.navbar .navitems li{
+    list-style: none;
+    padding: 0 15px;
+}
+.navbar .navitems li a {
+    color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.navbar .navitems li a:hover{
+    color: #ff3d00;
+}
+.navbar form{
+    display: flex;
+    height: 40px;
+    padding: 2px;
+    background: #1e232b;
+    min-width: 18%!important;
+    border-radius: 2px;
+    border: 1px solid rgba(155,155,155,0.2);
+    position: relative; 
+}
+.navbar form .searchdata{
+    width: 100%;
+  height: 100%;
+  padding: 0 10px;
+  color: #fff;
+  font-size: 17px;
+  border: none;
+  font-weight: 500;
+  background: none;
+}
+.navbar form .searchresults{
+  background-color: black;
+  color: white;
+  position: absolute;
+  top:50px;
+  width:100%;
+  height: 200px;
+  overflow-y: scroll;
+  z-index: 99999;
+}
+.searchresults{
+  padding: 1rem;
+}
+.searchresults li {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #fff
+}
+.searchresults a{
+  color: #fff;
+}
+
+.searchresults::-webkit-scrollbar{
+  display: none;
+}
+.navbar form button{
+    padding: 0 15px;
+    color: #fff;
+    font-size: 17px;
+    background: #ff3d00;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.navbar form button:hover{
+    background: #e63600;
+}
+.navbar .menuicon,
+.navbar .cancelicon,
+.navbar .searchicon{
+    width: 40px;
+  text-align: center;
+  margin: 0 50px;
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+  display: none;
+}
+.navbar .menuicon span,
+.navbar .cancelicon,
+.navbar .searchicon{
+  display: none;
+}
+@media (max-width: 1245px) {
+    .navbar{
+      padding: 0 50px;
+    }
+}
+@media (max-width: 1140px){
+    .navbar{
+      padding: 0px;
+    }
+    .navbar .logo{
+      flex: 2;
+      text-align: center;
+    }
+   
+    .navbar .navitems{
+      position: fixed;
+      z-index: 99;
+      top: 70px;
+      width: 100%;
+      left: -100%;
+      height: 100%;
+      padding: 10px 50px 0 50px;
+      text-align: center;
+      background: #14181f;
+      display: inline-block;
+      transition: left 0.3s ease;
+    }
+    .navbar .navitems.active{
+      left: 0px;
+    }
+    .navbar .navitems li{
+      line-height: 40px;
+      margin: 30px 0;
+    }
+    .navbar .navitems li a{
+      font-size: 20px;
+    }
+    .navbar form{
+      position: absolute;
+      top: 80px;
+      right: 50px;
+      opacity: 0;
+      pointer-events: none;
+      transition: top 0.3s ease, opacity 0.1s ease;
+    }
+    .navbar form.active{
+      top: 95px;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .navbar form:before{
+      position: absolute;
+      content: "";
+      top: -13px;
+      right: 0px;
+      width: 0;
+      height: 0;
+      z-index: -1;
+      border: 10px solid transparent;
+      border-bottom-color: #1e232b;
+      margin: -20px 0 0;
+    }
+    .navbar form:after{
+      position: absolute;
+      content: '';
+      height: 60px;
+      padding: 2px;
+      background: #1e232b;
+      border-radius: 2px;
+      min-width: calc(100% + 20px);
+      z-index: -2;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .navbar .menuicon{
+      display: block;
+    }
+    .navbar .searchicon,
+    .navbar .menuicon span{
+      display: block;
+    }
+    .navbar .menuicon span.hide,
+    .navbar .searchicon.hide{
+      display: none;
+    }
+    .navbar .cancelicon.show{
+      display: block;
+    }
+  }
+
+  @media (max-width: 980px){
+    .navbar .menuicon,
+    .navbar .cancelicon,
+    .navbar .searchicon{
+      margin: 0 20px;
+    }
+    .navbar form{
+      right: 30px;
+    }
+  }
+  @media (max-width: 350px){
+    .navbar .menuicon,
+    .navbar .cancelicon,
+    .navbar .searchicon{
+      margin: 0 10px;
+      font-size: 16px;
+    }
+  }
