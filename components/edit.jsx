@@ -67,7 +67,7 @@ const Edit = ({ data, id }) => {
                 Authorization: `Bearer ${user.token}`,
             }
         }
-        const response = await axios.put(`http://localhost:3000/api/posts/updatepost/${id}`, formData, config)
+        const response = await axios.put(`/api/posts/updatepost/${id}`, formData, config)
         if (response) {
             router.push(`/posts/${response.data}`)
         }
