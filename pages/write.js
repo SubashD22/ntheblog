@@ -1,9 +1,7 @@
-import React from 'react'
+import dynamic from 'next/dynamic'
 
-const Write = () => {
-  return (
-    <div>Write</div>
-  )
-}
+const Write = dynamic(() => import('../components/write'), {
+  ssr: false
+})
 
-export default Write
+export default () => <Write/>
