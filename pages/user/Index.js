@@ -5,7 +5,6 @@ import { useUserContext } from '../../context/userContext'
 const ProfileInfo = dynamic(() => import('../../components/ProfileInfo'), {
   ssr: false
 })
-
 const index = () => {
     const {user} = useUserContext();
     const router = useRouter();
