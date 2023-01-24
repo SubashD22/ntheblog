@@ -8,10 +8,8 @@ const Profile = ({userInfo}) => {
   const router = useRouter()
   const {user} = useUserContext()
   useEffect(()=>{
-    if(!user){
-        router.push('/login')
-    }
-    if(user._id === userInfo._id){
+    
+    if(user && user?._id === userInfo._id){
         router.push('/user')
     }
   },[userInfo])
