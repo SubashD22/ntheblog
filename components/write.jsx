@@ -106,20 +106,25 @@ const Write = () => {
 
         formData.append('Images', images);
         try {
+            let hostname;
+            if (process.env.NODE_ENV === 'development') {
+                hostname = process.env.NEXT_PUBLIC_DEV_URL
+            } else {
+                hostname = process.env.NEXT_PUBLIC_PROD_URL
+            };
             const config = {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
                     'content-type': 'multipart/form-data'
                 }
             }
-            const response = await axios.post('/api/posts/newpost', formData, config)
+            const response = await axios.post(`http://${hostname}/api/posts/newpost`, formData, config)
             if (response) {
                 router.push(`/posts/${response.data}`)
             }
         } catch (error) {
             console.log(error)
         }
-
     }
     let dis
     if (loading) {
