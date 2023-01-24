@@ -40,7 +40,7 @@ apiRoute.post(async(req,res)=>{
             const post = await BlogPost.create({
                 title:Title,
                 text:Text,
-                
+                categories,
                 image:req.files.Image[0].path,
                 imageId:req.files.Image[0].filename,
                 images:req.body.Images,
