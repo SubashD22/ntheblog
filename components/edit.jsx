@@ -7,6 +7,12 @@ import { FiUpload } from 'react-icons/fi'
 import { useRouter } from 'next/router';
 import { useUserContext } from '../context/userContext';
 import { toast } from 'react-hot-toast';
+import cloudinary from 'cloudinary/lib/cloudinary';
+cloudinary.config({
+    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_NAME,
+    api_key: process.env.NEXT_PUBLIC_CLOUDINARY_KEY,
+    api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_SECRET
+})
 
 const Edit = ({ data, id }) => {
     const { user } = useUserContext();
@@ -19,22 +25,51 @@ const Edit = ({ data, id }) => {
     const [loading, setloading] = useState(false)
     const [postData, setPostData] = useState(
         {
-            Title: `${data?.title}`,
-            Image: '',
+            title: `${data?.title}`,
+            image: `${data?.image}`,
+            imageId: `${data?.imageId}`
         }
     );
     const [category, setCategory] = useState(data.categories || [])
     const [images, setImages] = useState([]);
     const [value, setValue] = useState(`${data?.text}`);
-    const { Title, Image } = postData;
-    const mainOnchange = (e, type) => {
-        const value = type === 'image' ? e.target.files[0] : e.target.value
+    const { title, image, imageId } = postData;
+    const fileChange = async (e) => {
+        const file = e.target.files[0];
+        if (imageId === '') {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
+            try {
+                const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
+                setPostData((prevData) => ({
+                    ...prevData,
+                    image: res.data.url,
+                    imageId: res.data.public_id
+                }))
+            } catch (error) {
+                toast.error('image upload failed')
+            }
 
-        setPostData((prevData) => ({
-            ...prevData,
-            [e.target.name]: value
-        }))
-    };
+        } else if (imageId !== '') {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
+            try {
+                console.log("deleting")
+                const delImage = await cloudinary.v2.uploader.destroy(imageId);
+                const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
+                setPostData((prevData) => ({
+                    ...prevData,
+                    image: res.data.url,
+                    imageId: res.data.public_id
+                }))
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+    }
     let categoriesArray = ["fashion", "food", "games", "hobby", "movies", "music", "sports", "story", "travel"];
     const addCategory = (e, c) => {
         e.preventDefault()
@@ -52,16 +87,14 @@ const Edit = ({ data, id }) => {
         if (!category.length) {
             return toast.error('add category')
         }
-        const formData = new FormData
-        for (let key in postData) {
-            formData.append(key, postData[key])
+        const formData = {
+            title,
+            image,
+            imageId,
+            text: value,
+            categories: category,
+            images
         }
-        formData.append('Text', value)
-        category.forEach(c =>
-            formData.append('Categories', c)
-        )
-        formData.append('Images', images)
-            ;
         const config = {
             headers: {
                 Authorization: `Bearer ${user.token}`,
@@ -124,14 +157,14 @@ const Edit = ({ data, id }) => {
             <form className={style.writeForm} onSubmit={publish}>
                 <div className={style.mainimage}>
                     <label htmlFor='main-image' className={style.upbtn}><FiUpload /></label>
-                    <input type="file" name="Image" id="main-image" onChange={(e) => mainOnchange(e, 'image')} disabled={dis} />
+                    <input type="file" name="Image" id="main-image" onChange={fileChange} disabled={dis} />
                     <div className={style.mainimagecontainer}>
-                        <img src={postData.Image !== '' ? URL.createObjectURL(postData.Image) : data?.image} alt="" />
+                        <img src={postData.image !== '' ? postData.image : data?.image} alt="" />
                     </div>
 
                 </div>
                 <div className={style.main}>
-                    <input type='text' name='Title' value={Title} onChange={(e) => mainOnchange(e, 'string')} className={style.maintitle} placeholder='Title' required disabled={dis} />
+                    <input type='text' name='Title' value={title} onChange={(e) => { setPostData(p => ({ ...p, title: e.target.value })) }} className={style.maintitle} placeholder='Title' required disabled={dis} />
                 </div>
                 <div className={style.categories}>
                     <div className={style.categorieslist}>
