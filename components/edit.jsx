@@ -136,13 +136,13 @@ const Edit = ({ data, id }) => {
                 <div className={style.categories}>
                     <div className={style.categorieslist}>
                         <h3>Categories:</h3>
-                        {categoriesArray.map((c, i) => (<button key={i} className={style.categorybtn}
+                        {categoriesArray.map((c, i) => (<button key={i} className='drkbtn'
                             onClick={(e) => addCategory(e, c)}>
                             {c}</button>))}
                     </div>
                     <div className={style.selectedcategories}>
                         <h3>Selected Categories:</h3>
-                        {category.map((c, i) => (<button key={i} className={style.categorybtn}
+                        {category.map((c, i) => (<button key={i} className='drkbtn'
                             onClick={(e) => removeCategory(e, c)}>
                             {c}</button>))}
                     </div>
