@@ -92,6 +92,9 @@ const Write = () => {
         if (!category.length) {
             return toast.error('add category')
         }
+        if (value === '') {
+            return toast.error('add content')
+        }
         const formData = new FormData
         for (let key in postData) {
             formData.append(key, postData[key])
