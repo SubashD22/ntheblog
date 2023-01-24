@@ -71,13 +71,13 @@ const ProfileInfo = ({ userInfo }) => {
                             <div class="profile mr-3">
                                 <img src={userInfo?.profilePic} alt="..." width="130" class="rounded mb-2 img-thumbnail" />
                                 <input type="file" className="image-input" id="dp" onChange={(e) => imageChange(e, 'Dp')} />
-                                {user?._id === userInfo?._id ? <label className='image-edit' htmlFor='dp'><FiEdit3 style={{ display: 'inline' }} /></label> : <></>}
+                                {user?._id === userInfo?._id ? <label className='image-edit' htmlFor='dp'><FiEdit3 style={{ display: 'inline', cursor: 'pointer' }} /></label> : <></>}
                             </div>
                             <div class="media-body mb-5 text-white">
                                 {usernameEdit ? <><input type='text' name='username' value={username} onChange={onInputChange} autocomplete="off" />
-                                    <div className='editInfo'><FiX onClick={() => closeInput('username')} /><FiCheck onClick={() => callupdate(username, "username")} /></div>
+                                    <div className='editInfo'><FiX style={{ cursor: 'pointer' }} onClick={() => closeInput('username')} /><FiCheck style={{ cursor: 'pointer' }} onClick={() => callupdate(username, "username")} /></div>
                                 </> :
-                                    <h4 class="mt-0 mb-0">{userInfo?.username} {user?._id === userInfo?._id ? <FiEdit3 style={{ display: 'inline' }} onClick={() => openInput(username)} /> : <></>} </h4>}
+                                    <h4 class="mt-0 mb-0">{userInfo?.username} {user?._id === userInfo?._id ? <FiEdit3 style={{ display: 'inline', cursor: 'pointer' }} onClick={() => openInput(username)} /> : <></>} </h4>}
                                 <p class="small mb-4">
                                     <i class="fas fa-map-marker-alt mr-2"></i>{userInfo?.email}</p>
                             </div>
@@ -92,8 +92,8 @@ const ProfileInfo = ({ userInfo }) => {
                         </ul>
                     </div>
                     <div class="px-4 py-3">
-                        <h5 class="mb-0 .h5">About {aboutEdit ? <div className='editInfo'><FiX onClick={() => closeInput('aboutme')} /><FiCheck onClick={() => callupdate(aboutme, "aboutme")} /></div> :
-                            <>{user?._id === userInfo?._id ? <FiEdit3 style={{ display: 'inline' }} onClick={openAboutInput} /> : <></>}</>}
+                        <h5 class="mb-0 .h5">About {aboutEdit ? <div className='editInfo'><FiX style={{ cursor: 'pointer' }} onClick={() => closeInput('aboutme')} /><FiCheck style={{ cursor: 'pointer' }} onClick={() => callupdate(aboutme, "aboutme")} /></div> :
+                            <>{user?._id === userInfo?._id ? <FiEdit3 style={{ display: 'inline', cursor: 'pointer' }} onClick={openAboutInput} /> : <></>}</>}
                         </h5>
                         <div class="p-4 rounded shadow-sm bg-light">
                             {aboutEdit ? <textarea name='aboutme' value={aboutme} onChange={onInputChange}></textarea> : <p class="font-italic mb-0">{userInfo?.aboutme}</p>}
