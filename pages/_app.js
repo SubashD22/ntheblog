@@ -13,7 +13,8 @@ export default function App({ Component, pageProps }) {
   return(<UserContext>
     <QueryClientProvider client={queryClient}>
     <Layout>
-      <Toaster/>
+      <Toaster containerClassName='toster'
+      position='bottom-center'/>
     <AnimatePresence exitBeforeEnter>
       <motion.div
       key={router.route}

@@ -1324,3 +1324,6 @@ overflow: hidden;
   text-align: center;
   font-weight: bold;
 }
+.toaster{
+  z-index:999999999
+}
