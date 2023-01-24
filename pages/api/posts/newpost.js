@@ -6,7 +6,6 @@ import BlogPost from '../../../utils/models/post'
 
 const apiRoute = nextConnect({
     onError(error, req, res) {
-        console.log(error)
         res.status(501).json({ error: `Sorry something Happened! ${error.message}` });
       },
       onNoMatch(req, res) {
@@ -18,7 +17,6 @@ apiRoute.use(parser.fields([
 ]))
 apiRoute.post(async(req,res)=>{
     await db();
-    console.log(req.body)
     const{Title,Text,Categories:categories} = req.body
     if(req.files.Image){
         try {
