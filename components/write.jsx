@@ -118,7 +118,7 @@ const Write = () => {
                     'content-type': 'multipart/form-data'
                 }
             }
-            const response = await axios.post(`https://${hostname}/api/posts/newpost`, formData, config)
+            const response = await axios.post(`http://${hostname}/api/posts/newpost`, formData, config)
             if (response) {
                 router.push(`/posts/${response.data}`)
             }
