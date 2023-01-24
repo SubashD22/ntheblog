@@ -105,16 +105,21 @@ const Write = () => {
         )
 
         formData.append('Images', images);
-        const config = {
-            headers: {
-                Authorization: `Bearer ${user.token}`,
-                'content-type': 'multipart/form-data'
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                    'content-type': 'multipart/form-data'
+                }
             }
+            const response = await axios.post('/api/posts/newpost', formData, config)
+            if (response) {
+                router.push(`/posts/${response.data}`)
+            }
+        } catch (error) {
+            console.log(error)
         }
-        const response = await axios.post('/api/posts/newpost', formData, config)
-        if (response) {
-            router.push(`/posts/${response.data}`)
-        }
+
     }
     let dis
     if (loading) {
