@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import cloudinary from "../middlewares/cloudinaryConfig";
 import Comment from './comments'
 const slug = require('mongoose-slug-generator');
 mongoose.plugin(slug);

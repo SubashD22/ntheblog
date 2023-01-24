@@ -7,6 +7,12 @@ import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 import style from '../styles/write.module.css'
 import { FiUpload } from 'react-icons/fi';
+import cloudinary from 'cloudinary/lib/cloudinary';
+cloudinary.config({
+    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_NAME,
+    api_key: process.env.NEXT_PUBLIC_CLOUDINARY_KEY,
+    api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_SECRET
+})
 const Write = () => {
     const { user } = useUserContext();
     const router = useRouter();
@@ -20,20 +26,50 @@ const Write = () => {
     const [loading, setloading] = useState(false)
     const [category, setCategory] = useState([])
     const [postData, setPostData] = useState({
-        Title: '',
-        Image: '',
+        title: '',
+        image: '',
+        imageId: ''
     });
-    const [images, setImages] = useState([]);
-    const { Title, Image } = postData;
-    const [value, setValue] = useState('');
-    const mainOnchange = (e, type) => {
-        const value = type === 'image' ? e.target.files[0] : e.target.value
 
-        setPostData((prevData) => ({
-            ...prevData,
-            [e.target.name]: value
-        }))
-    };
+    const [images, setImages] = useState([]);
+    const { title, image, imageId } = postData;
+    const [value, setValue] = useState('');
+    const fileChange = async (e) => {
+        const file = e.target.files[0];
+        if (imageId === '') {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
+            try {
+                const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
+                setPostData((prevData) => ({
+                    ...prevData,
+                    image: res.data.url,
+                    imageId: res.data.public_id
+                }))
+            } catch (error) {
+                toast.error('image upload failed')
+            }
+
+        } else if (imageId !== '') {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
+            try {
+                console.log("deleting")
+                const delImage = await cloudinary.v2.uploader.destroy(imageId);
+                const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
+                setPostData((prevData) => ({
+                    ...prevData,
+                    image: res.data.url,
+                    imageId: res.data.public_id
+                }))
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+    }
     const quillRef = useRef();
     const imageHandler = (e) => {
         const editor = quillRef.current.getEditor();
@@ -49,7 +85,6 @@ const Write = () => {
                 const formData = new FormData();
                 formData.append("file", file);
                 formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
-                console.log(process.env.CLOUDINARY_PRESET)
                 const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData); // upload data into server or aws or cloudinary
                 console.log(res)
                 const url = res?.data?.url;
@@ -95,27 +130,18 @@ const Write = () => {
         if (value === '') {
             return toast.error('add content')
         }
-        const formData = new FormData
-        for (let key in postData) {
-            formData.append(key, postData[key])
+        const formData = {
+            title,
+            image,
+            imageId,
+            text: value,
+            categories: category,
+            images
         }
-        formData.append('Text', value)
-        category.forEach(c =>
-            formData.append('Categories', c)
-        )
-
-        formData.append('Images', images);
         try {
-            let hostname;
-            if (process.env.NODE_ENV === 'development') {
-                hostname = process.env.NEXT_PUBLIC_DEV_URL
-            } else {
-                hostname = process.env.NEXT_PUBLIC_PROD_URL
-            };
             const config = {
                 headers: {
                     Authorization: `Bearer ${user.token}`,
-                    'content-type': 'multipart/form-data'
                 }
             }
             const response = await axios.post(`/api/posts/newpost`, formData, config)
@@ -135,14 +161,14 @@ const Write = () => {
         <div className='s-content'>
             <form className={style.writeForm} onSubmit={publish}>
                 <div className={style.mainimage}>
-                    <input type="file" name="Image" id="main-image" onChange={(e) => mainOnchange(e, 'image')} disabled={dis} />
+                    <input type="file" name="Image" id="main-image" onChange={fileChange} disabled={dis} />
                     <div className={style.mainimagecontainer}>
-                        <img src={postData.Image !== '' ? URL.createObjectURL(postData.Image) : null} alt="" />
+                        <img src={postData.image !== '' ? image : null} alt="" />
                     </div>
                     <label className={style.upbtn} htmlFor='main-image'><FiUpload /></label>
                 </div>
                 <div className={style.main}>
-                    <input type='text' name='Title' value={Title} onChange={(e) => mainOnchange(e, 'string')} className={style.maintitle} placeholder='Title' required disabled={dis} />
+                    <input type='text' name='Title' value={title} onChange={(e) => { setPostData(p => ({ ...p, title: e.target.value })) }} className={style.maintitle} placeholder='Title' required disabled={dis} />
                 </div>
                 <div className={style.categories}>
                     <div className={style.categorieslist}>
