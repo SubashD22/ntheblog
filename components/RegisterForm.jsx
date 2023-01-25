@@ -1,18 +1,30 @@
 import React, { useState } from 'react';
 import { FiUpload } from 'react-icons/fi';
 import { useUserContext } from '../context/userContext';
-import style from '../styles/Login.module.css'
+import style from '../styles/Login.module.css';
+import { RotatingLines } from 'react-loader-spinner'
+import cloudinary from 'cloudinary/lib/cloudinary';
+import { toast } from 'react-hot-toast';
+import axios from 'axios';
+cloudinary.config({
+    cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_NAME,
+    api_key: process.env.NEXT_PUBLIC_CLOUDINARY_KEY,
+    api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_SECRET
+})
 
 function RegisterForm({ changetoLog }) {
     const { register } = useUserContext()
+    const [iloading, setIloading] = useState(false);
+    const [loading, setLoading] = useState(false)
     const [formData, setformdata] = useState({
         username: '',
         email: '',
         password: '',
-        image: '',
+        profilePic: '',
+        picId: '',
         aboutme: ''
     });
-    const { username, password, email, image, aboutme } = formData;
+    const { username, password, email, profilePic, picId, aboutme } = formData;
     const onChange = (e, type) => {
         const value = type === 'image' ? e.target.files[0] : e.target.value
         setformdata((prevData) => ({
@@ -20,17 +32,59 @@ function RegisterForm({ changetoLog }) {
             [e.target.name]: value
         }))
     }
-    const submit = async (e) => {
-        e.preventDefault();
-        const Data = new FormData
-        Data.append("username", username)
-        Data.append("email", email)
-        Data.append("password", password);
-        Data.append("aboutme", aboutme)
-        if (image !== '') {
-            Data.append("Dp", image)
+    const fileChange = async (e) => {
+        const file = e.target.files[0];
+        if (picId === '') {
+            setIloading(true)
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_DPRESET)
+            try {
+                const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
+                setformdata((prevData) => ({
+                    ...prevData,
+                    profilePic: res.data.url,
+                    picId: res.data.public_id
+                }))
+                setIloading(false)
+            } catch (error) {
+                setIloading(false)
+                console.log(error)
+                toast.error('image upload failed')
+            }
+
+        } else if (picId !== '') {
+            setIloading(true)
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
+            try {
+                console.log("deleting")
+                const delImage = await cloudinary.v2.uploader.destroy(picId);
+                const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
+                setformdata((prevData) => ({
+                    ...prevData,
+                    profilePic: res.data.url,
+                    picId: res.data.public_id
+                }))
+                setIloading(false)
+            }
+            catch (error) {
+                setIloading(false)
+                toast.error(error)
+            }
         }
-        register(Data);
+    }
+    const submit = async (e) => {
+        setLoading(true)
+        e.preventDefault();
+        try {
+            await register(formData);
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+        }
+
     }
     return (
 
@@ -38,25 +92,46 @@ function RegisterForm({ changetoLog }) {
             <span className={style.formtitle}>
                 Register
             </span>
-            <input type="file" name="image" style={{ display: 'none' }} id="Dp" onChange={(e) => onChange(e, 'image')} />
+            <input type="file" name="image" style={{ display: 'none' }} id="Dp" onChange={fileChange} />
             <div className={style.dpcontainer}>
-                <img src={formData.image ? URL.createObjectURL(formData.image) : null} alt="" className={style.dpImg} />
-                <label className='' style={{ position: 'absolute' }} htmlFor='Dp'><FiUpload /></label>
+                {iloading ? <RotatingLines
+                    strokeColor="black"
+                    strokeWidth="5"
+                    animationDuration="0.75"
+                    width="70"
+                    visible={true}
+                /> : <>
+                    <img src={picId !== '' ? profilePic : null} alt="" className={style.dpImg} />
+                    <label className='' style={{ position: 'absolute' }} htmlFor='Dp'><FiUpload /></label>
+                </>}
+
             </div>
             <div className={style.inputbox}>
-                <input className={style.input} type="text" name="username" value={username} onChange={(e) => onChange(e, 'text')} placeholder='Username' required />
+                <input className={style.input} type="text" name="username" value={username} onChange={onChange} placeholder='Username' required />
             </div>
             <div className={style.inputbox}>
-                <input className={style.input} type="email" name="email" value={email} onChange={(e) => onChange(e, 'text')} placeholder='Email' required />
+                <input className={style.input} type="email" name="email" value={email} onChange={onChange} placeholder='Email' required />
             </div>
             <div className={style.inputbox}>
-                <textarea className={style.input} name='aboutme' maxLength='500' value={aboutme} onChange={(e) => onChange(e, 'text')} placeholder="A little about yourself"></textarea>
+                <textarea className={style.input} name='aboutme' maxLength='500' value={aboutme} onChange={onChange} placeholder="A little about yourself"></textarea>
             </div>
             <div className={style.inputbox}>
-                <input className={style.input} type="password" name="password" value={password} onChange={(e) => onChange(e, 'text')} placeholder="Password" required />
+                <input className={style.input} type="password" name="password" value={password} onChange={onChange} placeholder="Password" required />
             </div>
             <div className={style.btnbox}>
-                <button type='submit' className='button28'><span style={{ color: '#fff' }}>Sign Up</span></button>
+                <button type='submit' className='button28'
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }} >{
+                        loading ? <RotatingLines
+                            strokeColor="#fff"
+                            strokeWidth="5"
+                            animationDuration="0.75"
+                            width="30"
+                            visible={true}
+                        /> : <span style={{ color: '#fff' }}>Sign Up</span>
+                    }</button>
             </div>
             <div className={style.bottomtext}>
                 <p className={style.text}> Already an user ? <span onClick={changetoLog}>Log In</span></p>

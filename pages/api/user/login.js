@@ -12,6 +12,7 @@ const handler = async (req,res) =>{
             username:user.username,
             email:user.email,
             profilePic: user.profilePic,
+            picId:user.picId,
             aboutme:user.aboutme,
             token: generateToken(user._id),
         })

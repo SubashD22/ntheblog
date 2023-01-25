@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, {useState,useEffect,useContext,createContext}from 'react';
 import { useRouter } from 'next/router';
 import {toast} from 'react-hot-toast';
+import { da } from 'date-fns/locale';
 
 const Context = createContext();
 export const UserContext = ({children}) =>{
@@ -69,25 +70,49 @@ export const UserContext = ({children}) =>{
             router.push('/user/addinfo')
         }
     };
-    const updateInfo = async(data,type)=>{
+    const updateImage = async (profilePic,picId)=>{
+        console.log(profilePic)
         try {
-           const config = {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                }
-            }
-            const updateForm = new FormData;
-            updateForm.append(`${type}`, data);
-            const {data:updatedData} = await axios.put(`/api/user/updateinfo/${user._id}`, updateForm, config);
-            if(updatedData){
-                setUser(prevdata => ({
-                    ...prevdata,
-                    ...updatedData
-                }));
-                toast.success(`successfully updated ${type}`);
-            }
+            const config = {
+                 headers: {
+                     Authorization: `Bearer ${user.token}`,
+                 }
+             }
+             const formdata = {
+                profilePic,
+                picId
+             }
+             const {data} = await axios.put(`/api/user/updateinfo/${user._id}`, formdata, config);
+             console.log(data)
+             if(data){
+                 setUser(prevdata => ({
+                     ...prevdata,
+                     ...data
+                 }));
+                 toast.success(`successfully updated ${type}`);
+             }
+         } catch (error) {
+            console.log(error)
+         }
+    }
+    const updateInfo = async(data)=>{
+        console.log(data)
+        try {
+          const config = {
+               headers: {
+                   Authorization: `Bearer ${user.token}`,
+               }
+           }
+           const {data:updatedData} = await axios.put(`/api/user/updateinfo/${user._id}`, data, config);
+           if(updatedData){
+               setUser(prevdata => ({
+                   ...prevdata,
+                   ...updatedData
+               }));
+               toast.success(`successfully updated ${Object.keys(data)}`);
+           }
         } catch (error) {
-            toast.error(error.response.data);
+          toast.error(error.message);
         }
     };
     const deletepost = async(id)=>{
@@ -110,7 +135,7 @@ export const UserContext = ({children}) =>{
     }
     return(
         <Context.Provider value={{
-            user,setUser,login,register,logout,addInfo,updateInfo,deletepost
+            user,setUser,login,register,logout,addInfo,updateInfo,deletepost,updateImage
         }}>
             {children}
         </Context.Provider>
