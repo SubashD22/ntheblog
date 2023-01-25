@@ -34,45 +34,24 @@ function RegisterForm({ changetoLog }) {
     }
     const fileChange = async (e) => {
         const file = e.target.files[0];
-        if (picId === '') {
-            setIloading(true)
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_DPRESET)
-            try {
-                const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
-                setformdata((prevData) => ({
-                    ...prevData,
-                    profilePic: res.data.url,
-                    picId: res.data.public_id
-                }))
-                setIloading(false)
-            } catch (error) {
-                setIloading(false)
-                console.log(error)
-                toast.error('image upload failed')
-            }
-
-        } else if (picId !== '') {
-            setIloading(true)
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
-            try {
-                console.log("deleting")
-                const delImage = await cloudinary.v2.uploader.destroy(picId);
-                const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
-                setformdata((prevData) => ({
-                    ...prevData,
-                    profilePic: res.data.url,
-                    picId: res.data.public_id
-                }))
-                setIloading(false)
-            }
-            catch (error) {
-                setIloading(false)
-                toast.error(error)
-            }
+        setIloading(true)
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_DPRESET)
+        if (picId !== '') {
+            const delImage = await cloudinary.v2.uploader.destroy(picId);
+        }
+        try {
+            const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
+            setformdata((prevData) => ({
+                ...prevData,
+                profilePic: res.data.url,
+                picId: res.data.public_id
+            }))
+            setIloading(false)
+        } catch (error) {
+            setIloading(false)
+            toast.error('image upload failed')
         }
     }
     const submit = async (e) => {
