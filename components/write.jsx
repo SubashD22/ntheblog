@@ -7,6 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 import style from '../styles/write.module.css'
 import { FiUpload } from 'react-icons/fi';
+import { RotatingLines } from 'react-loader-spinner'
 import cloudinary from 'cloudinary/lib/cloudinary';
 cloudinary.config({
     cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_NAME,
@@ -23,6 +24,7 @@ const Write = () => {
         }
 
     }, [user]);
+    const [iloading, setIloading] = useState(false)
     const [loading, setloading] = useState(false)
     const [category, setCategory] = useState([])
     const [postData, setPostData] = useState({
@@ -37,6 +39,7 @@ const Write = () => {
     const fileChange = async (e) => {
         const file = e.target.files[0];
         if (imageId === '') {
+            setIloading(true)
             const formData = new FormData();
             formData.append("file", file);
             formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
@@ -47,11 +50,14 @@ const Write = () => {
                     image: res.data.url,
                     imageId: res.data.public_id
                 }))
+                setIloading(false)
             } catch (error) {
+                setIloading(false)
                 toast.error('image upload failed')
             }
 
         } else if (imageId !== '') {
+            setIloading(true)
             const formData = new FormData();
             formData.append("file", file);
             formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
@@ -64,11 +70,14 @@ const Write = () => {
                     image: res.data.url,
                     imageId: res.data.public_id
                 }))
+                setIloading(false)
             }
             catch (error) {
-                console.log(error)
+                setIloading(false)
+                toast(error)
             }
         }
+
     }
     const quillRef = useRef();
     const imageHandler = (e) => {
@@ -124,10 +133,13 @@ const Write = () => {
     };
     const publish = async (e) => {
         e.preventDefault();
+        setloading(true);
         if (!category.length) {
+            setloading(false)
             return toast.error('add category')
         }
         if (value === '') {
+            setloading(false)
             return toast.error('add content')
         }
         const formData = {
@@ -149,6 +161,7 @@ const Write = () => {
                 router.push(`/posts/${response.data}`)
             }
         } catch (error) {
+            setloading(false)
             console.log(error)
         }
     }
@@ -160,41 +173,62 @@ const Write = () => {
     return (
         <div className='s-content'>
             <form className={style.writeForm} onSubmit={publish}>
-                <div className={style.mainimage}>
-                    <input type="file" name="Image" id="main-image" onChange={fileChange} disabled={dis} />
-                    <div className={style.mainimagecontainer}>
-                        <img src={postData.image !== '' ? image : null} alt="" />
-                    </div>
-                    <label className={style.upbtn} htmlFor='main-image'><FiUpload /></label>
-                </div>
-                <div className={style.main}>
-                    <input type='text' name='Title' value={title} onChange={(e) => { setPostData(p => ({ ...p, title: e.target.value })) }} className={style.maintitle} placeholder='Title' required disabled={dis} />
-                </div>
-                <div className={style.categories}>
-                    <div className={style.categorieslist}>
-                        <h3>Categories:</h3>
-                        {categoriesArray.map((c, i) => (<button key={i} className="drkbtn"
-                            onClick={(e) => addCategory(e, c)}>
-                            {c}</button>))}
-                    </div>
-                    <div className={style.selectedcategories} >
-                        <h3>Selected Categories:</h3>
-                        {category.map((c, i) => (<button key={i} className="drkbtn"
-                            onClick={(e) => removeCategory(e, c)}>
-                            {c}</button>))}
-                    </div>
+                <fieldset style={{ border: 'none' }} disabled={loading}>
+                    <div className={style.mainimage}>
+                        {iloading ? <RotatingLines
+                            strokeColor="grey"
+                            strokeWidth="5"
+                            animationDuration="0.75"
+                            width="96"
+                            visible={true}
+                        /> : <>
+                            <input type="file" name="Image" id="main-image" onChange={fileChange} disabled={dis} />
+                            <div className={style.mainimagecontainer}>
+                                <img src={postData.image !== '' ? image : null} alt="" />
+                            </div>
+                            <label className={style.upbtn} htmlFor='main-image'><FiUpload /></label>
+                        </>}
 
-                </div>
-                <div className={style.quill}>
-                    <ReactQuill ref={quillRef} value={value} name='Text' onChange={setValue} placeholder='content...' modules={modules} />
-                </div>
-                <div style={{
-                    marginTop: '10px',
-                    zIndex: 999
-                }} className={style.submit}>
-                    <button className='button28' type='submit' disabled={dis}>Publish</button>
-                </div>
 
+                    </div>
+                    <div className={style.main}>
+                        <input type='text' name='Title' value={title} onChange={(e) => { setPostData(p => ({ ...p, title: e.target.value })) }} className={style.maintitle} placeholder='Title' required disabled={dis} />
+                    </div>
+                    <div className={style.categories}>
+                        <div className={style.categorieslist}>
+                            <h3>Categories:</h3>
+                            {categoriesArray.map((c, i) => (<button key={i} className="drkbtn"
+                                onClick={(e) => addCategory(e, c)}>
+                                {c}</button>))}
+                        </div>
+                        <div className={style.selectedcategories} >
+                            <h3>Selected Categories:</h3>
+                            {category.map((c, i) => (<button key={i} className="drkbtn"
+                                onClick={(e) => removeCategory(e, c)}>
+                                {c}</button>))}
+                        </div>
+
+                    </div>
+                    <div className={style.quill}>
+                        <ReactQuill ref={quillRef} value={value} name='Text' onChange={setValue} placeholder='content...' modules={modules} />
+                    </div>
+                    <div style={{
+                        marginTop: '10px',
+                        zIndex: 999
+                    }} className={style.submit}>
+                        <button className='button28' type='submit'
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center'
+                            }}>{loading ? <RotatingLines
+                                strokeColor="grey"
+                                strokeWidth="5"
+                                animationDuration="0.75"
+                                width="50"
+                                visible={true}
+                            /> : 'Publish'}</button>
+                    </div>
+                </fieldset>
             </form>
 
         </div>

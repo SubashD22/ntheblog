@@ -81,8 +81,10 @@
     margin-right: 0.5rem;
 }
 .selectedcategories{
+    text-align: center;
     margin-bottom: 10px;
 }
 .categorieslist{
+    text-align: center;
     margin-bottom: 10px;
 }

@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { useUserContext } from '../context/userContext';
 import { toast } from 'react-hot-toast';
 import cloudinary from 'cloudinary/lib/cloudinary';
+import { RotatingLines } from 'react-loader-spinner';
 cloudinary.config({
     cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_NAME,
     api_key: process.env.NEXT_PUBLIC_CLOUDINARY_KEY,
@@ -22,6 +23,7 @@ const Edit = ({ data, id }) => {
             router.push('/login')
         }
     }, []);
+    const [iloading, setIloading] = useState(false)
     const [loading, setloading] = useState(false)
     const [postData, setPostData] = useState(
         {
@@ -37,6 +39,7 @@ const Edit = ({ data, id }) => {
     const fileChange = async (e) => {
         const file = e.target.files[0];
         if (imageId === '') {
+            setIloading(true)
             const formData = new FormData();
             formData.append("file", file);
             formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
@@ -47,11 +50,14 @@ const Edit = ({ data, id }) => {
                     image: res.data.url,
                     imageId: res.data.public_id
                 }))
+                setIloading(false)
             } catch (error) {
+                setIloading(false)
                 toast.error('image upload failed')
             }
 
         } else if (imageId !== '') {
+            setIloading(true)
             const formData = new FormData();
             formData.append("file", file);
             formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
@@ -64,9 +70,11 @@ const Edit = ({ data, id }) => {
                     image: res.data.url,
                     imageId: res.data.public_id
                 }))
+                setIloading(false)
             }
             catch (error) {
-                console.log(error)
+                setIloading(false)
+                toast.error(error.message)
             }
         }
     }
@@ -84,8 +92,14 @@ const Edit = ({ data, id }) => {
     };
     const publish = async (e) => {
         e.preventDefault();
+        setloading(true)
         if (!category.length) {
+            setloading(false)
             return toast.error('add category')
+        }
+        if (!value.length) {
+            setloading(false)
+            return toast.error('add content')
         }
         const formData = {
             title,
@@ -100,10 +114,17 @@ const Edit = ({ data, id }) => {
                 Authorization: `Bearer ${user.token}`,
             }
         }
-        const response = await axios.put(`/api/posts/updatepost/${id}`, formData, config)
-        if (response) {
-            router.push(`/posts/${response.data}`)
+        try {
+            const response = await axios.put(`/api/posts/updatepost/${id}`, formData, config)
+            if (response) {
+                setloading(false)
+                router.push(`/posts/${response.data}`)
+            }
+        } catch (error) {
+            setloading(false)
+            toast.error(error.message)
         }
+
     };
     const quillRef = useRef();
     const imageHandler = (e) => {
@@ -155,42 +176,62 @@ const Edit = ({ data, id }) => {
         <div className='s-content'>
 
             <form className={style.writeForm} onSubmit={publish}>
-                <div className={style.mainimage}>
-                    <label htmlFor='main-image' className={style.upbtn}><FiUpload /></label>
-                    <input type="file" name="Image" id="main-image" onChange={fileChange} disabled={dis} />
-                    <div className={style.mainimagecontainer}>
-                        <img src={postData.image !== '' ? postData.image : data?.image} alt="" />
-                    </div>
+                <fieldset style={{ border: 'none' }} disabled={loading}>
+                    <div className={style.mainimage}>
+                        {iloading ? <RotatingLines
+                            strokeColor="grey"
+                            strokeWidth="5"
+                            animationDuration="0.75"
+                            width="96"
+                            visible={true}
+                        /> : <>
+                            <label htmlFor='main-image' className={style.upbtn}><FiUpload /></label>
+                            <input type="file" name="Image" id="main-image" onChange={fileChange} disabled={dis} />
+                            <div className={style.mainimagecontainer}>
+                                <img src={postData.image !== '' ? postData.image : data?.image} alt="" />
+                            </div>
+                        </>}
 
-                </div>
-                <div className={style.main}>
-                    <input type='text' name='Title' value={title} onChange={(e) => { setPostData(p => ({ ...p, title: e.target.value })) }} className={style.maintitle} placeholder='Title' required disabled={dis} />
-                </div>
-                <div className={style.categories}>
-                    <div className={style.categorieslist}>
-                        <h3>Categories:</h3>
-                        {categoriesArray.map((c, i) => (<button key={i} className='drkbtn'
-                            onClick={(e) => addCategory(e, c)}>
-                            {c}</button>))}
-                    </div>
-                    <div className={style.selectedcategories}>
-                        <h3>Selected Categories:</h3>
-                        {category.map((c, i) => (<button key={i} className='drkbtn'
-                            onClick={(e) => removeCategory(e, c)}>
-                            {c}</button>))}
-                    </div>
 
-                </div>
-                <div className={style.quill}>
-                    <ReactQuill ref={quillRef} value={value} name='Text' onChange={setValue} placeholder='content...' modules={modules} />
-                </div>
-                <div style={{
-                    marginTop: '10px',
-                    zIndex: 999
-                }}>
-                    <button type='submit' className='button28' disabled={dis}>Publish</button>
-                </div>
+                    </div>
+                    <div className={style.main}>
+                        <input type='text' name='Title' value={title} onChange={(e) => { setPostData(p => ({ ...p, title: e.target.value })) }} className={style.maintitle} placeholder='Title' required disabled={dis} />
+                    </div>
+                    <div className={style.categories}>
+                        <div className={style.categorieslist}>
+                            <h3>Categories:</h3>
+                            {categoriesArray.map((c, i) => (<button key={i} className='drkbtn'
+                                onClick={(e) => addCategory(e, c)}>
+                                {c}</button>))}
+                        </div>
+                        <div className={style.selectedcategories}>
+                            <h3>Selected Categories:</h3>
+                            {category.map((c, i) => (<button key={i} className='drkbtn'
+                                onClick={(e) => removeCategory(e, c)}>
+                                {c}</button>))}
+                        </div>
 
+                    </div>
+                    <div className={style.quill}>
+                        <ReactQuill ref={quillRef} value={value} name='Text' onChange={setValue} placeholder='content...' modules={modules} />
+                    </div>
+                    <div style={{
+                        marginTop: '10px',
+                        zIndex: 999
+                    }}>
+                        <button className='button28' type='submit'
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center'
+                            }}>{loading ? <RotatingLines
+                                strokeColor="grey"
+                                strokeWidth="5"
+                                animationDuration="0.75"
+                                width="50"
+                                visible={true}
+                            /> : 'Publish'}</button>
+                    </div>
+                </fieldset>
             </form>
 
         </div>
