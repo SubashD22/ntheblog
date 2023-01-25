@@ -70,15 +70,21 @@ const ProfileInfo = ({ userInfo }) => {
             setIloading(false)
             return
         }
-        if (picId && picId !== '') {
-            const delImage = await cloudinary.v2.uploader.destroy(picId);
+        try {
+            if (picId && picId !== '') {
+                const delImage = await cloudinary.v2.uploader.destroy(picId);
+            }
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_DPRESET);
+            const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
+            updateImage(res.data.url, res.data.public_id);
+            setIloading(false)
+        } catch (error) {
+            setIloading(false);
+            toast.error(error.message)
         }
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_DPRESET);
-        const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
-        updateImage(res.data.url, res.data.public_id);
-        setIloading(false)
+
     }
     return (
         <motion.div initial={{ opacity: 0 }}
