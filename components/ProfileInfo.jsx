@@ -22,7 +22,7 @@ const fetchPosts = (id) => {
 
 const ProfileInfo = ({ userInfo }) => {
     const { user, updateInfo, updateImage } = useUserContext();
-    const { picId } = user
+    const picId = user?.picId
     const [iloading, setIloading] = useState(false);
     const [profileInfo, setProfileinfo] = useState({
         username: userInfo?.username,

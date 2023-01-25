@@ -17,8 +17,7 @@ const handler = async (req,res) =>{
             token: generateToken(user._id),
         })
     }else{
-        res.status(400);
-        throw new Error("invalid credentials")
+        res.status(400).send('invalid credential');
     }
 }
 const generateToken = (id)=>{

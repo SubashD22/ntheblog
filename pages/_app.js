@@ -1,15 +1,23 @@
 import '../styles/base.css'
 import '../styles/globals.css'
-
+import '../styles/nprogress.css'
+import NProgress from 'nprogress';
 import {Toaster} from 'react-hot-toast'
 import { UserContext } from '../context/userContext'
 import Layout from '../components/Layout'
 import {QueryClientProvider, QueryClient}from 'react-query'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
-const queryClient = new QueryClient()
+import { useEffect } from 'react';
+const queryClient = new QueryClient();
+
 export default function App({ Component, pageProps }) {
   const router = useRouter();
+  useEffect(() => {
+    router.events.on('routeChangeStart', () =>  NProgress.start());
+    router.events.on('routeChangeComplete', () =>  NProgress.done());
+    router.events.on('routeChangeError', () =>  NProgress.done());
+  }, []);
   return(<UserContext>
     <QueryClientProvider client={queryClient}>
     <Layout>
