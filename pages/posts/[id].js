@@ -24,6 +24,9 @@ const fullpost = ({post}) => {
     <div>
         <Head>
             <title>{post?.title}</title>
+            <meta property="og:title" content={poat?.title} />
+            <meta property="og:type" content='article' />
+            {post?.image && post.image !== '' ? <meta property="og:image" content={post?.image} />:<></>}
         </Head>
         <motion.div 
          
