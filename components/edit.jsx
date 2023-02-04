@@ -38,6 +38,7 @@ const Edit = ({ data, id }) => {
     const { title, image, imageId } = postData;
     const fileChange = async (e) => {
         const file = e.target.files[0];
+        if (!file) { return }
         if (imageId === '') {
             setIloading(true)
             const formData = new FormData();
@@ -194,7 +195,7 @@ const Edit = ({ data, id }) => {
 
 
                     </div>
-                    <div className={style.main}>
+                    <div className={style.main} style={{ margin: 'auto' }}>
                         <input type='text' name='Title' value={title} onChange={(e) => { setPostData(p => ({ ...p, title: e.target.value })) }} className={style.maintitle} placeholder='Title' required disabled={dis} />
                     </div>
                     <div className={style.categories}>

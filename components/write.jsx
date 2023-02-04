@@ -38,6 +38,9 @@ const Write = () => {
     const [value, setValue] = useState('');
     const fileChange = async (e) => {
         const file = e.target.files[0];
+        if (!file) {
+            return
+        }
         if (imageId === '') {
             setIloading(true)
             const formData = new FormData();

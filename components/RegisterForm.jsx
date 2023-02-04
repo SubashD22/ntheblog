@@ -34,6 +34,9 @@ function RegisterForm({ changetoLog }) {
     }
     const fileChange = async (e) => {
         const file = e.target.files[0];
+        if (!file) {
+            return
+        }
         setIloading(true)
         const formData = new FormData();
         formData.append("file", file);
