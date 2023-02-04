@@ -1086,13 +1086,15 @@ overflow: hidden;
 }
 .archive {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, 350px);
   grid-gap: 32px;
   grid-auto-rows: minmax(300px,auto);
   grid-auto-flow: dense;
+  place-content: center;
 }
 .archive .entry {
   margin-bottom: 40px;
+  place-self: center;
 }
 
 .archive .entry__thumb, .archive .entry__text {
