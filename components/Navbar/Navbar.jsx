@@ -48,7 +48,8 @@ const Navbar = () => {
           {showNav ? <FiX /> : <FiMenu />}
         </div>
         <div className={style.logo}>
-          <Link href='/'><h1>NT,HE.</h1></Link>
+          <Link href='/'
+            onClick={handleShowNavbar}><h1>NT,HE.</h1></Link>
         </div>
         <div className={`${style.navitems} ${showNav && style.active}`}>
           <li><Link href="/posts" onClick={handleShowNavbar}>All Posts</Link></li>
