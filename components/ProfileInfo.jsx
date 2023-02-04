@@ -140,7 +140,7 @@ const ProfileInfo = ({ userInfo }) => {
                     </div>
                     <div class="py-4 px-4">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h5 class="mb-0"> Your posts</h5>
+                            <h5 class="mb-0">Posts</h5>
                         </div>
                         <div className='archive'>
                             {Posts?.map(p => <PostCard key={p._id} post={p} />)}
