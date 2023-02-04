@@ -425,19 +425,18 @@ input[type="button"].btn--primary:focus {
 
 
 .s-content__author {
-  margin-top: 10.2rem;
-  padding-left: 9rem;
-  position: relative;
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
 }
 
 .s-content__author img {
   margin: 0 !important;
-  width: 6.6rem;
-  height: 6.6rem;
+  width: 5.6rem;
+  height: 5.6rem;
   border-radius: 50%;
-  position: absolute;
-  left: 0;
-  top: 0;
 }
 
 .s-content__author p {

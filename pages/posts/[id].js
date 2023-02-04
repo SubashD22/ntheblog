@@ -64,8 +64,6 @@ const fullpost = ({post}) => {
                         <h4 className="s-content__author-name">
                             <Link href={`/user/${post.author._id}`}>{post.author.username}</Link>
                         </h4>
-                    
-                        <p>{post.author.aboutme}</p>
                     </div>
                 </div>
             </article>
