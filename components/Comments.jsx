@@ -16,9 +16,12 @@ const Comments = ({ postId }) => {
     const [comment, setComment] = useState('');
     const [edditing, setEditing] = useState(false);
     const [commentId, setCommentid] = useState('');
+    const [loading, setloading] = useState(false)
     const submitComment = async (e) => {
         e.preventDefault();
+        setloading(true)
         if (!user) {
+            setloading(false)
             return toast.error('You must be logged in')
         }
         const data = { postId, comment };
@@ -33,6 +36,7 @@ const Comments = ({ postId }) => {
                 refetch();
                 setComment('')
                 toast.success(response.data)
+                setloading(false)
             }
         } catch (error) {
             toast.error(error.message)
@@ -40,6 +44,7 @@ const Comments = ({ postId }) => {
     };
     const updateComment = async (e) => {
         e.preventDefault();
+        setloading(true)
         const data = { commentId, comment };
         const config = {
             headers: {
@@ -58,10 +63,11 @@ const Comments = ({ postId }) => {
         } catch (error) {
             toast.error(error.message)
         }
-
+        setloading(false)
     };
     const deleteComment = async (e, id) => {
         e.preventDefault();
+        setloading(true)
         const data = { commentId: id };
         const config = {
             headers: {
@@ -77,6 +83,7 @@ const Comments = ({ postId }) => {
         } catch (error) {
             toast.error(error.message)
         }
+        setloading(false)
     }
     const editComment = (c, id) => {
         console.log(id)
@@ -127,8 +134,8 @@ const Comments = ({ postId }) => {
                                     <textarea name="cMessage" id="cMessage" className="full-width" placeholder="Your Comment" value={comment}
                                         onChange={(e) => { setComment(e.target.value) }} required></textarea>
                                 </div>
-                                {edditing ? <button onClick={updateComment} className="submit btn--primary btn--large full-width" >Update</button> :
-                                    <button type="submit" className="submit btn--primary btn--large full-width" >Submit</button>}
+                                {edditing ? <button onClick={updateComment} className="submit btn--primary btn--large full-width" disabled={loading} >Update</button> :
+                                    <button type="submit" className="submit btn--primary btn--large full-width" disabled={loading}  >Submit</button>}
 
                             </fieldset>
                         </form>
