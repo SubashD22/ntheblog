@@ -18,6 +18,9 @@ const Comments = ({ postId }) => {
     const [commentId, setCommentid] = useState('');
     const submitComment = async (e) => {
         e.preventDefault();
+        if (!user) {
+            return toast.error('You must be logged in')
+        }
         const data = { postId, comment };
         const config = {
             headers: {
