@@ -120,12 +120,12 @@ const Comments = ({ postId }) => {
                         <h3 className="h2">{edditing ? 'Edit Comment' : 'Add Comment'}</h3>
                         <form name="contactForm" id="contactForm" onSubmit={submitComment}>
                             <fieldset>
-                                <div class="message form-field">
-                                    <textarea name="cMessage" id="cMessage" class="full-width" placeholder="Your Comment" value={comment}
+                                <div className="message form-field">
+                                    <textarea name="cMessage" id="cMessage" className="full-width" placeholder="Your Comment" value={comment}
                                         onChange={(e) => { setComment(e.target.value) }} required></textarea>
                                 </div>
-                                {edditing ? <button onClick={updateComment} class="submit btn--primary btn--large full-width" >Update</button> :
-                                    <button type="submit" class="submit btn--primary btn--large full-width" >Submit</button>}
+                                {edditing ? <button onClick={updateComment} className="submit btn--primary btn--large full-width" >Update</button> :
+                                    <button type="submit" className="submit btn--primary btn--large full-width" >Submit</button>}
 
                             </fieldset>
                         </form>

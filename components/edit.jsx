@@ -116,7 +116,7 @@ const Edit = ({ data, id }) => {
             }
         }
         try {
-            const response = await axios.put(`/api/posts/updatepost/${id}`, formData, config)
+            const response = await axios.put(`/api/posts/updatepost/${data?._id}`, formData, config)
             if (response) {
                 setloading(false)
                 router.push(`/posts/${response.data}`)

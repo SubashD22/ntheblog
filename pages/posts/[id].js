@@ -11,6 +11,7 @@ const Comments = dynamic(() => import('../../components/Comments'), {
   })
 
 const fullpost = ({post}) => {
+    console.log(typeof(post?.image))
     const {user,deletepost} = useUserContext();
     const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
@@ -20,6 +21,7 @@ const fullpost = ({post}) => {
     return null;
   }
   const date= new Date(post?.createdAt)
+ 
   return (
     <div>
         <Head>
@@ -32,7 +34,7 @@ const fullpost = ({post}) => {
                 <div className="s-content__header col-full">
                     {user?._id === post.author._id ? 
                     <div>
-                        <Link className='drkbtn' href={`/edit/${post._id}`}>Edit</Link>
+                        <Link className='drkbtn' href={`/edit/${post.slug}`}>Edit</Link>
                         <button className='drkbtn' onClick={()=>deletepost(post._id)}>Delete</button>
                     </div>:
                     <></>}
@@ -43,12 +45,14 @@ const fullpost = ({post}) => {
                         <li className="date">{date?.toDateString()}</li>
                     </ul>
                 </div>
-                {post?.image && post.image !== '' ?
+                {post?.image && post?.image !== '' || undefined ?
+               
                 <div className="s-content__media col-full">
-                <div className="s-content__post-thumb">
+                 <div className="s-content__post-thumb">
                     <img src={post?.image} />
-                </div>
-            </div> : <></> }
+                 </div>
+                </div> :<></>
+             }
                 
                 <div className="col-full s-content__main" dangerouslySetInnerHTML={{ __html: post?.text }}/>
                 <div className="s-content__tags scmp">

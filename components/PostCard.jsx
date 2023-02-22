@@ -6,17 +6,18 @@ const PostCard = ({ post }) => {
     const date = new Date(post?.createdAt)
     return (
         <article className='masonry__brick entry format-standard'>
-            <div className="entry__thumb">
-                <a href={`/posts/${post._id}`} className="entry__thumb-link">
-                    <img src={post?.image} />
-                </a>
-            </div>
+            {post?.image && post?.image !== '' || undefined ?
+                <div className="entry__thumb">
+                    <a href={`/posts/${post.slug}`} className="entry__thumb-link">
+                        <img src={post?.image} />
+                    </a>
+                </div> : <></>}
             <div className="entry__text">
                 <div className="entry__header">
                     <div className="entry__date">
                         <p>{date.toDateString()}</p>
                     </div>
-                    <h1 className="entry__title"><Link href={`/posts/${post._id}`}>{post?.title}</Link></h1>
+                    <h1 className="entry__title"><Link href={`/posts/${post.slug}`}>{post?.title}</Link></h1>
                 </div>
                 <div className="entry__meta">
                     <span className="entry__meta-links">

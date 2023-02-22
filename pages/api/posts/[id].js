@@ -7,7 +7,7 @@ const handler = async (req,res) =>{
         await db();
         const {id} = req.query
         try {
-           const post =  await BlogPost.findById(id).populate('author','-password')
+           const post =  await BlogPost.findOne({slug:id}).populate('author','-password')
            res.status(200).json(post)
         } catch (error) {
             console.log(error);

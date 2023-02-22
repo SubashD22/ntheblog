@@ -337,6 +337,8 @@ input[type="button"].btn--primary:focus {
 
 .s-content__media, .s-content__post-thumb {
   position: relative;
+  display: flex;
+  place-content: center
 }
 .s-content__main {
   margin-top: 6rem;
@@ -352,11 +354,11 @@ input[type="button"].btn--primary:focus {
   max-width: 960px;
   margin: 3rem 0 3rem -6rem;
 }
-.s-content__main code {
+.s-content__main pre {
+  white-space: pre-wrap;
   font-size: 1.4rem;
   margin: 0 .2rem;
   padding: .3rem .6rem;
-  white-space: nowrap;
   background: #e5e5e5;
   border: 1px solid #d8d8d8;
   border-radius: 3px;

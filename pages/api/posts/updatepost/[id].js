@@ -30,7 +30,7 @@ const handler = async(req,res)=>{
                     images,
                     author:req.user._id
                 });
-            res.status(200).json(post._id)
+            res.status(200).json(post.slug)
         
             } catch (error) {
                 res.status(400).send(error.message)
@@ -45,7 +45,7 @@ const handler = async(req,res)=>{
                     author:req.user._id,
                     images
                 });
-                res.status(200).json(post._id)
+                res.status(200).json(post.slug)
             } catch (error) {
                 res.status(400).send(error.message)
             }

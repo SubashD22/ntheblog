@@ -16,10 +16,11 @@ export const getServerSideProps = async(ctx)=>{
       hostname = process.env.NEXT_PUBLIC_PROD_URL
     };
   const {data} = await axios.get(`http://${hostname}/api/posts/${edit}`);
+
   return{
       props:{
           post:data,
-          id:edit
+          id:data._id
       }
   } 
 }
