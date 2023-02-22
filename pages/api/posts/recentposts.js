@@ -8,6 +8,7 @@ const handler = async (req,res) =>{
         await db();
         try {
            const Posts =  await BlogPost.find({}).populate('author','-password').sort({createdAt:-1}).limit(3)
+           console.log(typeof(undefined))
            res.status(200).json(Posts)
         } catch (error) {
             console.log(error);

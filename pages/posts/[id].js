@@ -46,7 +46,7 @@ const fullpost = ({post}) => {
                         <li className="date">{date?.toDateString()}</li>
                     </ul>
                 </div>
-                {post?.image && post?.image !== '' || undefined ?
+                {post?.image && post?.image !== 'undefined' ?
                
                 <div className="s-content__media col-full">
                  <div className="s-content__post-thumb">

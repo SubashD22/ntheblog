@@ -6,7 +6,7 @@ const PostCard = ({ post }) => {
     const date = new Date(post?.createdAt)
     return (
         <article className='masonry__brick entry format-standard'>
-            {post?.image && post?.image !== '' || undefined ?
+            {post?.image && post?.image !== "undefined" ?
                 <div className="entry__thumb">
                     <a href={`/posts/${post.slug}`} className="entry__thumb-link">
                         <img src={post?.image} />
