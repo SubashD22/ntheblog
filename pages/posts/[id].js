@@ -26,6 +26,7 @@ const fullpost = ({post}) => {
     <div>
         <Head>
             <title>{post?.title}</title>
+            <meta name="description" content={`by ${post.author.username}`} />
         </Head>
         <motion.div 
          

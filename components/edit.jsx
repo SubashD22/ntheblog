@@ -169,10 +169,6 @@ const Edit = ({ data, id }) => {
             }
         },
     }), [])
-    let dis
-    if (loading) {
-        dis = true
-    } else dis = false
     return (
         <div className='s-content'>
 
@@ -187,7 +183,7 @@ const Edit = ({ data, id }) => {
                             visible={true}
                         /> : <>
                             <label htmlFor='main-image' className={style.upbtn}><FiUpload /></label>
-                            <input type="file" name="Image" id="main-image" onChange={fileChange} disabled={dis} />
+                            <input type="file" name="Image" id="main-image" onChange={fileChange} disabled={loading} />
                             <div className={style.mainimagecontainer}>
                                 <img src={postData.image !== '' ? postData.image : data?.image} alt="" />
                             </div>
@@ -196,7 +192,7 @@ const Edit = ({ data, id }) => {
 
                     </div>
                     <div className={style.main} style={{ margin: 'auto' }}>
-                        <input type='text' name='Title' value={title} onChange={(e) => { setPostData(p => ({ ...p, title: e.target.value })) }} className={style.maintitle} placeholder='Title' required disabled={dis} />
+                        <input type='text' name='Title' value={title} onChange={(e) => { setPostData(p => ({ ...p, title: e.target.value })) }} className={style.maintitle} placeholder='Title' required disabled={loading} />
                     </div>
                     <div className={style.categories}>
                         <div className={style.categorieslist}>
