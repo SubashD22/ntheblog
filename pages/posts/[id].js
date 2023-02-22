@@ -11,7 +11,6 @@ const Comments = dynamic(() => import('../../components/Comments'), {
   })
 
 const fullpost = ({post}) => {
-    console.log(typeof(post?.image))
     const {user,deletepost} = useUserContext();
     const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
