@@ -29,6 +29,16 @@ function LoginForm({ changetoReg }) {
         }
 
     }
+    const demoLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true)
+        try {
+            await login({ username: 'Demo', password: 'sub123' });
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+        }
+    }
     return (
         <form onSubmit={submit} className={style.form}>
             <fieldset style={{ border: 'none' }} disabled={loading}>
@@ -45,7 +55,8 @@ function LoginForm({ changetoReg }) {
                     <button type='submit' className='button28'
                         style={{
                             display: 'flex',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            marginBottom: '2rem'
                         }} >{
                             loading ? <RotatingLines
                                 strokeColor="#fff"
@@ -55,7 +66,21 @@ function LoginForm({ changetoReg }) {
                                 visible={true}
                             /> : <span style={{ color: '#fff' }}>Sign in</span>
                         }</button>
+                    <button onClick={demoLogin} className='button28'
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }} >{
+                            loading ? <RotatingLines
+                                strokeColor="#fff"
+                                strokeWidth="5"
+                                animationDuration="0.75"
+                                width="30"
+                                visible={true}
+                            /> : <span style={{ color: '#fff' }}>Sign in as Demo</span>
+                        }</button>
                 </div>
+
                 <div className={style.bottomtext}>
                     <p className={style.text}> New here ? <span onClick={changetoReg}>Register</span></p>
                 </div>
@@ -63,5 +88,4 @@ function LoginForm({ changetoReg }) {
         </form>
     )
 }
-
 export default LoginForm
