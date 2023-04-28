@@ -4,7 +4,7 @@ import User from '../../../utils/models/user';
 import BlogPost from '../../../utils/models/post'
 
 const handler = async (req,res) =>{
-   
+        console.log(req.subdomains)
         await db();
         try {
            const Posts =  await BlogPost.find({}).populate('author','-password').sort({createdAt:-1}).limit(3)
