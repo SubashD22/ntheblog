@@ -18,7 +18,6 @@ const handler = async(req,res)=>{
                res.status(200).send('comment posted')
             }
         } catch (error) {
-            console.log(error)
             res.status(400).send(error.message)
         }
        

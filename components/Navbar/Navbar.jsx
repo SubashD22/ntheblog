@@ -89,7 +89,7 @@ const Navbar = () => {
                       justifyContent: 'flex-start',
                       gap: '1rem'
                     }} >
-                      <img src={r.profilePic} style={{
+                      <img src={r.profilePic ? r.profilePic : '/blank-pfp.png'} style={{
                         width: '5rem',
                         height: '5rem',
                         borderRadius: '50%'

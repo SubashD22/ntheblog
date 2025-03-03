@@ -19,7 +19,6 @@ const handler = async(req,res)=>{
       if(searchPost.author.toString() === req.user.id){
         try {
             const post =  await BlogPost.findByIdAndDelete(id);
-            console.log(post)
             res.status(200).send('deleted')
     
         } catch (error) {

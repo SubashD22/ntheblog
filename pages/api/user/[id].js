@@ -10,7 +10,6 @@ const handler = async (req,res) =>{
          const user=  await User.findById(id).select('-password');
          res.status(200).json(user)
         } catch (error) {
-            console.log(error);
             res.status(400).send(error.message)
         }
     }

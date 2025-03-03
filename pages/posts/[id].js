@@ -62,7 +62,7 @@ const fullpost = ({post}) => {
                     </span>
                 </div>
                 <div className="s-content__author scmp" >
-                    <img src={post.author.profilePic} alt=""/>
+                    <img src={post.author.profilePic? post.author.profilePic : '/blank-pfp.png'} alf="user pfp" />
 
                     <div className="s-content__author-about">
                         <h4 className="s-content__author-name">

@@ -47,13 +47,12 @@ BlogPostSchema.post('findOneAndDelete', async function(doc){
      })
      const image = await cloudinary.uploader.destroy(doc.imageId);
     if(image.result){
-      console.log(image.result)
     }
       doc.images.forEach(async(element) => {
          if(element){
        const images= await cloudinary.uploader.destroy(element);
        if(images.result){
-       console.log(images.result)}
+    }
      }
     });
    

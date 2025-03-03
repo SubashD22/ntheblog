@@ -25,7 +25,7 @@ const PostCard = ({ post }) => {
                     </span>
                 </div>
                 <div className="entry__author" >
-                    <img src={post.author.profilePic} alt="" />
+                    <img src={post.author.profilePic ? post.author.profilePic:'/blank-pfp.png'} alt="" />
 
                     <h4 className="entry__author-name">
                         <Link href={`/user/${post.author._id}`}>{post.author.username}</Link>

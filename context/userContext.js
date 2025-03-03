@@ -71,7 +71,6 @@ export const UserContext = ({children}) =>{
         }
     };
     const updateImage = async (profilePic,picId)=>{
-        console.log(profilePic)
         try {
             const config = {
                  headers: {
@@ -83,7 +82,6 @@ export const UserContext = ({children}) =>{
                 picId
              }
              const {data} = await axios.put(`/api/user/updateinfo/${user._id}`, formdata, config);
-             console.log(data)
              if(data){
                  setUser(prevdata => ({
                      ...prevdata,
@@ -92,11 +90,9 @@ export const UserContext = ({children}) =>{
                  toast.success(`successfully updated ${type}`);
              }
          } catch (error) {
-            console.log(error)
          }
     }
     const updateInfo = async(data)=>{
-        console.log(data)
         try {
           const config = {
                headers: {

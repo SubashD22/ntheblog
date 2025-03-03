@@ -9,7 +9,6 @@ const handler = async(req,res)=>{
         const {username,aboutme,profilePic,picId} = req.body
         try {
             const user = await User.findById(req.user._id);
-            console.log(req.body)
             const updateuser = await User.findByIdAndUpdate(req.user._id,{
                 profilePic: profilePic || user.profilePic,
                 picId: picId || user.picId,

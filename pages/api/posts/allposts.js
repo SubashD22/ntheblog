@@ -9,7 +9,6 @@ const handler = async (req,res) =>{
            const Posts =  await BlogPost.find({}).populate('author','-password')
            res.status(200).json(Posts)
         } catch (error) {
-            console.log(error);
             res.status(400).send(error.message)
         }
 }

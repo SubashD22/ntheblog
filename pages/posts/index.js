@@ -7,7 +7,6 @@ const AllPosts = ({posts}) => {
     const [filter, setFilter] = useState('allpost')
 
     const selectedCategory = (e) => {
-        console.log(e.target.value)
         setFilter(e.target.value)
     };
     const filteredPost = posts?.filter(f => f.categories.includes(filter))

@@ -63,7 +63,6 @@ const Edit = ({ data, id }) => {
             formData.append("file", file);
             formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
             try {
-                console.log("deleting")
                 const delImage = await cloudinary.v2.uploader.destroy(imageId);
                 const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
                 setPostData((prevData) => ({
@@ -130,7 +129,6 @@ const Edit = ({ data, id }) => {
     const quillRef = useRef();
     const imageHandler = (e) => {
         const editor = quillRef.current.getEditor();
-        console.log(editor)
         const input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("accept", "image/*");
@@ -139,13 +137,10 @@ const Edit = ({ data, id }) => {
         input.onchange = async () => {
             const file = input.files[0];
             if (/^image\//.test(file.type)) {
-                console.log(file);
                 const formData = new FormData();
                 formData.append("file", file);
                 formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET)
-                console.log(process.env.REACT_APP_CLOUDINARY_PRESET)
                 const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_NAME}/image/upload`, formData); // upload data into server or aws or cloudinary
-                console.log(res)
                 const url = res?.data?.url;
                 setImages(p => [...p, res.data.public_id])
                 editor.insertEmbed(editor.getSelection(), "image", url);

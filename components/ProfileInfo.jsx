@@ -59,7 +59,6 @@ const ProfileInfo = ({ userInfo }) => {
 
     }
     const callupdate = async (data, type) => {
-        console.log(data)
         await updateInfo(data);
         closeInput(type);
     }
@@ -105,7 +104,7 @@ const ProfileInfo = ({ userInfo }) => {
                                     animationDuration="0.75"
                                     width="70"
                                     visible={true}
-                                /> : <><img src={userInfo?.profilePic} alt="..." width="130" class="rounded mb-2 img-thumbnail" />
+                                /> : <><img src={userInfo?.profilePic ? userInfo?.profilePic : '/blank-pfp.png'} alt="..." width="130" class="rounded mb-2 img-thumbnail" />
                                     <input type="file" className="image-input" id="dp" onChange={onfileChange} />
                                     {user?._id === userInfo?._id ? <label className='image-edit' htmlFor='dp'><FiEdit3 style={{ display: 'inline', cursor: 'pointer' }} /></label> : <></>}</>}
 

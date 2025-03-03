@@ -65,7 +65,6 @@ const Write = () => {
             formData.append("file", file);
             formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
             try {
-                console.log("deleting")
                 const delImage = await cloudinary.v2.uploader.destroy(imageId);
                 const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData);
                 setPostData((prevData) => ({
@@ -93,12 +92,10 @@ const Write = () => {
         input.onchange = async () => {
             const file = input.files[0];
             if (/^image\//.test(file.type)) {
-                console.log(file);
                 const formData = new FormData();
                 formData.append("file", file);
                 formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET)
                 const res = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`, formData); // upload data into server or aws or cloudinary
-                console.log(res)
                 const url = res?.data?.url;
                 setImages(p => [...p, res.data.public_id])
                 editor.insertEmbed(editor.getSelection(), "image", url);
@@ -166,7 +163,6 @@ const Write = () => {
             }
         } catch (error) {
             setloading(false)
-            console.log(error)
         }
     }
     let dis

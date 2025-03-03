@@ -86,7 +86,6 @@ const Comments = ({ postId }) => {
         setloading(false)
     }
     const editComment = (c, id) => {
-        console.log(id)
         setEditing(true);
         setComment(c);
         setCommentid(id)
